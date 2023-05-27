@@ -1,0 +1,24 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  run-rewrite:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: 17
+    - name: Initial build
+      run: ./mvnw package
+    - name: Openrewrite with Maven
+      run: ./mvnw
+             --no-transfer-progress
+             --show-version
+             rewrite:run
+    - name: Show applied changes
+      run: git status && git diff
+
